@@ -1,113 +1,151 @@
 async function init() {
-
   const response = await fetch("trips.json");
   const trips = await response.json();
 
-  buildDashboard(trips);
-
-}
-
-function buildDashboard(trips){
+  trips.sort(
+    (a, b) =>
+      new Date(a.start) -
+      new Date(b.start)
+  );
 
   buildStats(trips);
   buildTimeline(trips);
   buildInsights(trips);
   buildMap(trips);
   buildYearWheel(trips);
-
 }
 
-function daysBetween(start,end){
+function daysBetween(start, end) {
+  const startDate = new Date(start);
+  const endDate = new Date(end);
 
-  const s = new Date(start);
-  const e = new Date(end);
+  const diff =
+    endDate - startDate;
 
-  const diff = e - s;
-
-  return Math.round(
-    diff / (1000 * 60 * 60 * 24)
-  ) + 1;
-
+  return (
+    Math.round(
+      diff / 86400000
+    ) + 1
+  );
 }
 
-function buildStats(trips){
+function formatDate(date) {
+  return new Date(date)
+    .toLocaleDateString(
+      "en-GB",
+      {
+        day: "numeric",
+        month: "short"
+      }
+    );
+}
 
-  const countries = new Set();
-  const continents = new Set();
+function buildStats(trips) {
+
+  const countries =
+    new Set();
+
+  const continents =
+    new Set();
 
   let totalDays = 0;
 
-  trips.forEach(trip=>{
+  trips.forEach(trip => {
 
-    countries.add(trip.country);
-    continents.add(trip.continent);
-
-    totalDays += daysBetween(
-      trip.start,
-      trip.end
+    countries.add(
+      trip.country
     );
 
+    continents.add(
+      trip.continent
+    );
+
+    totalDays +=
+      daysBetween(
+        trip.start,
+        trip.end
+      );
   });
 
-  document.getElementById("tripCount").textContent =
+  document.getElementById(
+    "tripCount"
+  ).textContent =
     trips.length;
 
-  document.getElementById("travelDays").textContent =
+  document.getElementById(
+    "travelDays"
+  ).textContent =
     totalDays;
 
-  document.getElementById("countryCount").textContent =
+  document.getElementById(
+    "countryCount"
+  ).textContent =
     countries.size;
 
-  document.getElementById("continentCount").textContent =
+  document.getElementById(
+    "continentCount"
+  ).textContent =
     continents.size;
-
 }
 
-function buildTimeline(trips){
+function buildTimeline(trips) {
 
   const timeline =
-    document.getElementById("timeline");
+    document.getElementById(
+      "timeline"
+    );
 
   timeline.innerHTML = "";
 
-  trips
-  .sort(
-    (a,b)=>
-    new Date(a.start)-new Date(b.start)
-  )
-  .forEach(trip=>{
+  trips.forEach(trip => {
+
+    const days =
+      daysBetween(
+        trip.start,
+        trip.end
+      );
 
     timeline.innerHTML += `
       <div class="timeline-item">
 
+        <strong>
         ${trip.emoji}
         ${trip.destination}
+        </strong>
 
         <br>
 
-        ${formatDate(trip.start)}
+        ${formatDate(
+          trip.start
+        )}
         -
-        ${formatDate(trip.end)}
+        ${formatDate(
+          trip.end
+        )}
+
+        <br>
+
+        ${days} days
 
       </div>
     `;
-
   });
-
 }
 
-function buildInsights(trips){
+function buildInsights(trips) {
 
   const insights =
-    document.getElementById("insights");
+    document.getElementById(
+      "insights"
+    );
 
-  insights.innerHTML = "";
+  let longestTrip =
+    trips[0];
 
-  let longestTrip = trips[0];
   let longestDays = 0;
   let totalDays = 0;
 
-  trips.forEach(trip=>{
+  trips.forEach(trip => {
 
     const days =
       daysBetween(
@@ -117,20 +155,44 @@ function buildInsights(trips){
 
     totalDays += days;
 
-    if(days > longestDays){
-
+    if (
+      days >
+      longestDays
+    ) {
       longestDays = days;
       longestTrip = trip;
-
     }
-
   });
 
-  const avg =
+  const average =
     (
       totalDays /
       trips.length
     ).toFixed(1);
+
+  const countries = [
+    ...new Set(
+      trips.map(
+        trip => trip.country
+      )
+    )
+  ];
+
+  const today =
+    new Date();
+
+  const nextTrip =
+    trips.find(
+      trip =>
+        new Date(
+          trip.start
+        ) > today
+    );
+
+  const nextDestination =
+    nextTrip
+      ? nextTrip.destination
+      : "No upcoming trips";
 
   insights.innerHTML = `
 
@@ -141,87 +203,131 @@ function buildInsights(trips){
     </div>
 
     <div class="insight">
-      ✈️ Average Trip Length:
-      ${avg} days
-    </div>
-
-    <div class="insight">
-      🌍 Countries:
-      ${
-        [...new Set(
-          trips.map(t=>t.country)
-        )].length
-      }
+      ✈️ Average Trip:
+      ${average} days
     </div>
 
     <div class="insight">
       📅 Next Adventure:
-      ${trips[0].destination}
+      ${nextDestination}
     </div>
 
-  `;
+    <div class="insight">
+      🌎 Countries Visited:
+      ${countries.length}
+    </div>
 
+    <div class="insight">
+      🗺 Countries:
+      ${countries
+        .sort()
+        .join(", ")}
+    </div>
+
+    <div class="insight">
+      ✈️ Trips Recorded:
+      ${trips.length}
+    </div>
+  `;
 }
 
-function buildMap(trips){
+function buildMap(trips) {
 
   const map =
-    L.map("map")
-      .setView([35,15],2);
+    L.map("map");
 
   L.tileLayer(
     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     {
       attribution:
-      "&copy; OpenStreetMap"
+        "&copy; OpenStreetMap"
     }
   ).addTo(map);
 
-  trips.forEach(trip=>{
+  const markers = [];
 
-    L.marker(
-      [
+  trips.forEach(trip => {
+
+    const marker =
+      L.marker([
+        trip.lat,
+        trip.lng
+      ])
+      .addTo(map)
+      .bindPopup(
+        `
+        <b>
+        ${trip.emoji}
+        ${trip.destination}
+        </b>
+
+        <br>
+
+        ${trip.country}
+
+        <br>
+
+        ${formatDate(
+          trip.start
+        )}
+
+        -
+
+        ${formatDate(
+          trip.end
+        )}
+        `
+      );
+
+    markers.push(
+      marker
+    );
+  });
+
+  const group =
+    L.featureGroup(
+      markers
+    );
+
+  map.fitBounds(
+    group.getBounds(),
+    {
+      padding: [
+        40,
+        40
+      ]
+    }
+  );
+
+  const route =
+    trips.map(
+      trip => [
         trip.lat,
         trip.lng
       ]
-    )
-    .addTo(map)
-    .bindPopup(
-      `
-      <b>${trip.destination}</b>
-      <br>
-      ${trip.country}
-      `
     );
 
-  });
-
-  const line = trips.map(
-    t => [t.lat,t.lng]
-  );
-
   L.polyline(
-    line,
+    route,
     {
-      color:"#4cc9f0",
-      weight:3,
-      opacity:0.8
+      color: "#4cc9f0",
+      weight: 4,
+      opacity: 0.8
     }
   ).addTo(map);
-
 }
 
-function buildYearWheel(trips){
+function buildYearWheel(trips) {
 
   const canvas =
-    document.getElementById("wheel");
+    document.getElementById(
+      "wheel"
+    );
 
   const ctx =
-    canvas.getContext("2d");
-
-  const centerX = 300;
-  const centerY = 300;
-  const radius = 200;
+    canvas.getContext(
+      "2d"
+    );
 
   ctx.clearRect(
     0,
@@ -230,6 +336,10 @@ function buildYearWheel(trips){
     canvas.height
   );
 
+  const centerX = 300;
+  const centerY = 300;
+  const radius = 200;
+
   ctx.beginPath();
 
   ctx.arc(
@@ -237,145 +347,163 @@ function buildYearWheel(trips){
     centerY,
     radius,
     0,
-    Math.PI*2
+    Math.PI * 2
   );
 
   ctx.strokeStyle =
     "#26374d";
 
-  ctx.lineWidth = 40;
+  ctx.lineWidth =
+    40;
 
   ctx.stroke();
 
   const months = [
-
     "Jan","Feb","Mar",
     "Apr","May","Jun",
     "Jul","Aug","Sep",
     "Oct","Nov","Dec"
-
   ];
 
-  months.forEach((month,index)=>{
-
-    const angle =
-      (Math.PI*2/12)*index
-      - Math.PI/2;
-
-    const x =
-      centerX +
-      Math.cos(angle)*250;
-
-    const y =
-      centerY +
-      Math.sin(angle)*250;
-
-    ctx.fillStyle =
-      "#ffffff";
-
-    ctx.font =
-      "18px Segoe UI";
-
-    ctx.textAlign =
-      "center";
-
-    ctx.fillText(
+  months.forEach(
+    (
       month,
-      x,
-      y
-    );
+      index
+    ) => {
 
-  });
+      const angle =
+        (
+          Math.PI * 2 / 12
+        ) *
+        index -
+        Math.PI / 2;
+
+      const x =
+        centerX +
+        Math.cos(angle) *
+        250;
+
+      const y =
+        centerY +
+        Math.sin(angle) *
+        250;
+
+      ctx.fillStyle =
+        "#ffffff";
+
+      ctx.font =
+        "18px Segoe UI";
+
+      ctx.textAlign =
+        "center";
+
+      ctx.fillText(
+        month,
+        x,
+        y
+      );
+
+    }
+  );
 
   const colors = [
-
     "#4cc9f0",
     "#8b5cf6",
     "#34d399",
     "#f59e0b",
     "#ef4444",
     "#14b8a6"
-
   ];
 
   trips.forEach(
-    (trip,index)=>{
+    (
+      trip,
+      index
+    ) => {
 
-    const start =
-      new Date(
-        trip.start
+      const start =
+        new Date(
+          trip.start
+        );
+
+      const end =
+        new Date(
+          trip.end
+        );
+
+      const startDay =
+        Math.floor(
+          (
+            start -
+            new Date(
+              start.getFullYear(),
+              0,
+              1
+            )
+          ) / 86400000
+        );
+
+      const endDay =
+        Math.floor(
+          (
+            end -
+            new Date(
+              end.getFullYear(),
+              0,
+              1
+            )
+          ) / 86400000
+        );
+
+      const startAngle =
+        (
+          startDay /
+          365
+        ) *
+        Math.PI *
+        2 -
+        Math.PI / 2;
+
+      const endAngle =
+        (
+          endDay /
+          365
+        ) *
+        Math.PI *
+        2 -
+        Math.PI / 2;
+
+      const color =
+        colors[
+          index %
+          colors.length
+        ];
+
+      ctx.beginPath();
+
+      ctx.lineWidth =
+        40;
+
+      ctx.strokeStyle =
+        color;
+
+      ctx.shadowColor =
+        color;
+
+      ctx.shadowBlur =
+        15;
+
+      ctx.arc(
+        centerX,
+        centerY,
+        radius,
+        startAngle,
+        endAngle
       );
 
-    const end =
-      new Date(
-        trip.end
-      );
-
-    const startDay =
-      Math.floor(
-        (start -
-         new Date(
-           start.getFullYear(),
-           0,
-           1
-         )) /
-         86400000
-      );
-
-    const endDay =
-      Math.floor(
-        (end -
-         new Date(
-           end.getFullYear(),
-           0,
-           1
-         )) /
-         86400000
-      );
-
-    const startAngle =
-      (startDay/365)
-      *
-      Math.PI*2
-      -
-      Math.PI/2;
-
-    const endAngle =
-      (endDay/365)
-      *
-      Math.PI*2
-      -
-      Math.PI/2;
-
-    ctx.beginPath();
-
-    ctx.strokeStyle =
-      colors[
-        index %
-        colors.length
-      ];
-
-    ctx.shadowBlur = 15;
-
-    ctx.shadowColor =
-      colors[
-        index %
-        colors.length
-      ];
-
-    ctx.lineWidth = 40;
-
-    ctx.arc(
-      centerX,
-      centerY,
-      radius,
-      startAngle,
-      endAngle
-    );
-
-    ctx.stroke();
-
-  });
+      ctx.stroke();
+    }
+  );
 
   ctx.shadowBlur = 0;
 
@@ -385,25 +513,14 @@ function buildYearWheel(trips){
   ctx.font =
     "bold 36px Segoe UI";
 
+  ctx.textAlign =
+    "center";
+
   ctx.fillText(
     "2027",
     centerX,
-    centerY+15
+    centerY + 15
   );
-
-}
-
-function formatDate(date){
-
-  return new Date(date)
-          .toLocaleDateString(
-             "en-GB",
-             {
-               day:"numeric",
-               month:"short"
-             }
-          );
-
 }
 
 init();
