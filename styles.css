@@ -1,139 +1,314 @@
 :root{
---bg:#07111f;
---card:rgba(20,28,45,.72);
---blue:#4cc9f0;
---purple:#8b5cf6;
---green:#34d399;
---text:#f8fafc;
---muted:#94a3b8;
+  --bg:#07111f;
+  --bg2:#102746;
+
+  --card:rgba(20,28,45,.72);
+
+  --text:#f8fafc;
+  --muted:#94a3b8;
+
+  --blue:#4cc9f0;
+  --purple:#8b5cf6;
+  --green:#34d399;
+  --orange:#f59e0b;
+
+  --border:rgba(255,255,255,.08);
 }
 
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
 body{
-font-family:Segoe UI,Arial,sans-serif;
-background:
-radial-gradient(circle at top left,#12345d,#07111f 50%),
-radial-gradient(circle at top right,#36115b,#07111f 50%);
-color:var(--text);
-min-height:100vh;
+
+  font-family:
+    Inter,
+    Segoe UI,
+    Arial,
+    sans-serif;
+
+  color:var(--text);
+
+  min-height:100vh;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      #14345d,
+      var(--bg) 40%
+    ),
+    radial-gradient(
+      circle at top right,
+      #34115b,
+      var(--bg) 40%
+    );
+
 }
 
 header{
-text-align:center;
-padding:70px 20px;
+
+  text-align:center;
+
+  padding:
+    70px
+    20px
+    50px;
+
 }
 
 header h1{
-font-size:3rem;
+
+  font-size:3rem;
+
+  margin-bottom:10px;
+
 }
 
 header p{
-color:var(--muted);
-margin-top:10px;
+
+  color:var(--muted);
+
 }
 
 .container{
-max-width:1400px;
-margin:auto;
-padding:20px;
+
+  width:min(
+    1400px,
+    95%
+  );
+
+  margin:auto;
+
 }
 
 .stats{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:20px;
-margin-bottom:30px;
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:20px;
+
+  margin-bottom:30px;
+
 }
 
 .stat{
-background:var(--card);
-backdrop-filter:blur(20px);
-border-radius:24px;
-padding:25px;
-text-align:center;
+
+  background:var(--card);
+
+  backdrop-filter:blur(20px);
+
+  border-radius:24px;
+
+  padding:28px;
+
+  border:1px solid var(--border);
+
+  box-shadow:
+      0 20px 50px
+      rgba(0,0,0,.35);
+
+  text-align:center;
+
+  transition:.3s;
+
+}
+
+.stat:hover{
+
+  transform:
+    translateY(-3px);
+
 }
 
 .number{
-font-size:42px;
-font-weight:bold;
-color:var(--blue);
+
+  font-size:44px;
+
+  font-weight:700;
+
+  color:var(--blue);
+
+  margin-bottom:8px;
+
 }
 
 .label{
-color:var(--muted);
+
+  color:var(--muted);
+
 }
 
 .grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:25px;
+
+  display:grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:25px;
+
 }
 
 .card{
-background:var(--card);
-backdrop-filter:blur(20px);
 
-border-radius:24px;
-padding:25px;
+  background:var(--card);
 
-border:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(20px);
 
-box-shadow:
-0 20px 40px rgba(0,0,0,.35);
+  border-radius:28px;
+
+  border:
+    1px solid
+    var(--border);
+
+  padding:22px;
+
+  box-shadow:
+      0 25px 50px
+      rgba(0,0,0,.35);
+
 }
 
 .card h2{
-margin-bottom:20px;
+
+  margin-bottom:20px;
+
 }
 
 .timeline-item{
 
-background:rgba(255,255,255,.04);
+  background:
+    rgba(255,255,255,.04);
 
-padding:16px;
+  border-left:
+    4px solid
+    var(--blue);
 
-margin-bottom:12px;
+  border-radius:12px;
 
-border-radius:14px;
+  padding:16px;
 
-border-left:4px solid var(--blue);
+  margin-bottom:12px;
+
+  transition:.25s;
+
+}
+
+.timeline-item:hover{
+
+  transform:
+    translateX(4px);
+
+  background:
+    rgba(255,255,255,.06);
+
 }
 
 .insight{
-padding:15px;
-margin-bottom:10px;
-background:rgba(255,255,255,.05);
-border-radius:12px;
+
+  background:
+    rgba(255,255,255,.04);
+
+  border-radius:12px;
+
+  padding:15px;
+
+  margin-bottom:12px;
+
 }
 
 #map{
-height:350px;
-border-radius:20px;
-overflow:hidden;
+
+  height:380px;
+
+  border-radius:20px;
+
+  overflow:hidden;
+
 }
 
 canvas{
-width:100%;
-display:block;
+
+  width:100%;
+
+  display:block;
+
 }
 
-@media(max-width:900px){
+footer{
 
-.grid{
-grid-template-columns:1fr;
+  text-align:center;
+
+  color:var(--muted);
+
+  padding:
+    50px
+    0;
+
 }
 
-.stats{
-grid-template-columns:repeat(2,1fr);
+::-webkit-scrollbar{
+
+  width:10px;
+
 }
 
-header h1{
-font-size:2rem;
+::-webkit-scrollbar-track{
+
+  background:#0a1324;
+
 }
+
+::-webkit-scrollbar-thumb{
+
+  background:#233652;
+
+  border-radius:10px;
+
+}
+
+/* MOBILE */
+
+@media(max-width:1000px){
+
+  .stats{
+
+    grid-template-columns:
+      repeat(2,1fr);
+
+  }
+
+  .grid{
+
+    grid-template-columns:1fr;
+
+  }
+
+}
+
+@media(max-width:600px){
+
+  header h1{
+
+    font-size:2rem;
+
+  }
+
+  .stats{
+
+    grid-template-columns:1fr;
+
+  }
+
+  .number{
+
+    font-size:34px;
+
+  }
 
 }

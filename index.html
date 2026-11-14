@@ -1,119 +1,144 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Travel Planner Premium</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Planner Premium V2</title>
 
-  <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css">
 
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
 </head>
 
 <body>
 
 <header>
-  <h1>✈️ Travel Planner Premium</h1>
-  <p>Your family's travel story</p>
+
+    <h1>✈️ Travel Planner Premium</h1>
+
+    <p>Your family's travel story</p>
+
 </header>
 
 <div class="container">
 
-  <div class="stats">
+    <section class="stats">
 
-    <div class="stat">
-      <div class="number">8</div>
-      <div class="label">Trips</div>
+        <div class="stat">
+
+            <div
+                id="tripCount"
+                class="number">
+                -
+            </div>
+
+            <div class="label">
+                Trips
+            </div>
+
+        </div>
+
+        <div class="stat">
+
+            <div
+                id="travelDays"
+                class="number">
+                -
+            </div>
+
+            <div class="label">
+                Travel Days
+            </div>
+
+        </div>
+
+        <div class="stat">
+
+            <div
+                id="countryCount"
+                class="number">
+                -
+            </div>
+
+            <div class="label">
+                Countries
+            </div>
+
+        </div>
+
+        <div class="stat">
+
+            <div
+                id="continentCount"
+                class="number">
+                -
+            </div>
+
+            <div class="label">
+                Continents
+            </div>
+
+        </div>
+
+    </section>
+
+    <div class="grid">
+
+        <div class="card">
+
+            <h2>🗓 Year Wheel</h2>
+
+            <canvas
+                id="wheel"
+                width="600"
+                height="600">
+            </canvas>
+
+        </div>
+
+        <div class="card">
+
+            <h2>📍 Travel Timeline</h2>
+
+            <div id="timeline">
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>🌍 World Map</h2>
+
+            <div id="map"></div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>📈 Travel Insights</h2>
+
+            <div id="insights">
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="stat">
-      <div class="number">53</div>
-      <div class="label">Travel Days</div>
-    </div>
+    <footer>
 
-    <div class="stat">
-      <div class="number">6</div>
-      <div class="label">Countries</div>
-    </div>
+        Travel Planner Premium V2
 
-    <div class="stat">
-      <div class="number">2</div>
-      <div class="label">Continents</div>
-    </div>
-
-  </div>
-
-  <div class="grid">
-
-    <div class="card">
-      <h2>🗓 Year Wheel</h2>
-      <canvas id="wheel" width="600" height="600"></canvas>
-    </div>
-
-    <div class="card">
-      <h2>📍 Travel Timeline</h2>
-
-      <div class="timeline-item">
-        🇪🇸 Mallorca Weekend
-        <br>
-        15-22 February
-      </div>
-
-      <div class="timeline-item">
-        🇬🇧 London
-        <br>
-        12-15 April
-      </div>
-
-      <div class="timeline-item">
-        🇯🇵 Japan Family Trip
-        <br>
-        5-18 July
-      </div>
-
-      <div class="timeline-item">
-        🇺🇸 New York
-        <br>
-        8-14 October
-      </div>
-
-    </div>
-
-    <div class="card">
-      <h2>🌍 World Map</h2>
-      <div id="map"></div>
-    </div>
-
-    <div class="card">
-
-      <h2>📈 Travel Insights</h2>
-
-      <div class="insight">
-        🏆 Longest Trip: Japan
-      </div>
-
-      <div class="insight">
-        🌎 Most Visited Country: Spain
-      </div>
-
-      <div class="insight">
-        ✈️ Average Trip Length: 6.6 days
-      </div>
-
-      <div class="insight">
-        📅 Next Adventure: Mallorca
-      </div>
-
-    </div>
-
-  </div>
+    </footer>
 
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script src="app.js"></script>
 
 </body>

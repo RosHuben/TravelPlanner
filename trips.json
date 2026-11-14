@@ -1,0 +1,52 @@
+[
+  {
+    "destination": "Mallorca",
+    "country": "Spain",
+    "continent": "Europe",
+    "emoji": "🇪🇸",
+    "start": "2027-02-15",
+    "end": "2027-02-22",
+    "lat": 39.6953,
+    "lng": 3.0176
+  },
+  {
+    "destination": "London",
+    "country": "United Kingdom",
+    "continent": "Europe",
+    "emoji": "🇬🇧",
+    "start": "2027-04-12",
+    "end": "2027-04-15",
+    "lat": 51.5072,
+    "lng": -0.1276
+  },
+  {
+    "destination": "Tokyo",
+    "country": "Japan",
+    "continent": "Asia",
+    "emoji": "🇯🇵",
+    "start": "2027-07-05",
+    "end": "2027-07-18",
+    "lat": 35.6764,
+    "lng": 139.65
+  },
+  {
+    "destination": "New York",
+    "country": "USA",
+    "continent": "North America",
+    "emoji": "🇺🇸",
+    "start": "2027-10-08",
+    "end": "2027-10-14",
+    "lat": 40.7128,
+    "lng": -74.006
+  },
+  {
+    "destination": "Bishkek",
+    "country": "Kyrgyzstan",
+    "continent": "Asia",
+    "emoji": "🇰🇬",
+    "start": "2027-12-05",
+    "end": "2027-12-12",
+    "lat": 42.8746,
+    "lng": 74.5698
+  }
+]
