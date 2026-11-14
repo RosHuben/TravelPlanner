@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travel Planner</title>
+
+<style>
+:root {
+    --bg: #f3f6fb;
+    --card: #ffffff;
+    --primary: #0066ff;
+    --secondary: #00c2ff;
+    --text: #1f2937;
+    --shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Segoe UI, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    text-align: center;
+    padding: 40px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: auto;
+    padding: 30px;
+}
+
+.card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.stat {
+    text-align: center;
+}
+
+.number {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.timeline-item {
+    border-left: 4px solid var(--primary);
+    padding-left: 15px;
+    margin-bottom: 20px;
+}
+
+canvas {
+    width: 100%;
+    max-width: 600px;
+    display: block;
+    margin: auto;
+}
+
+@media (max-width:900px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>✈️ Travel Planner</h1>
+    <p>Familjens resor och weekendäventyr</p>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <div class="stats">
+            <div class="stat">
+                <div class="number">4</div>
+                <div>Resor</div>
+            </div>
+
+            <div class="stat">
+                <div class="number">27</div>
+                <div>Resdagar</div>
+            </div>
+
+            <div class="stat">
+                <div class="number">4</div>
+                <div>Länder</div>
+            </div>
+
+            <div class="stat">
+                <div class="number">2027</div>
+                <div>År</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid">
+
+        <div class="card">
+            <h2>🗓️ Årshjul</h2>
+            <canvas id="yearWheel" width="600" height="600"></canvas>
+        </div>
+
+        <div class="card">
+            <h2>📍 Resetidslinje</h2>
+
+            <div class="timeline-item">
+                <strong>Februari</strong><br>
+                Mallorca Weekend 🇪🇸
+            </div>
+
+            <div class="timeline-item">
+                <strong>April</strong><br>
+                London 🇬🇧
+            </div>
+
+            <div class="timeline-item">
+                <strong>Juli</strong><br>
+                Japan 🇯🇵
+            </div>
+
+            <div class="timeline-item">
+                <strong>Oktober</strong><br>
+                New York 🇺🇸
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const canvas = document.getElementById('yearWheel');
+const ctx = canvas.getContext('2d');
+
+const centerX = 300;
+const centerY = 300;
+const radius = 200;
+
+const months = [
+"Jan","Feb","Mar","Apr",
+"Maj","Jun","Jul","Aug",
+"Sep","Okt","Nov","Dec"
+];
+
+ctx.lineWidth = 30;
+ctx.strokeStyle = "#e5e7eb";
+ctx.beginPath();
+ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+ctx.stroke();
+
+for(let i = 0; i < 12; i++) {
+
+    const angle = (2 * Math.PI / 12) * i - Math.PI / 2;
+
+    const x = centerX + Math.cos(angle) * 250;
+    const y = centerY + Math.sin(angle) * 250;
+
+    ctx.fillStyle = "#333";
+    ctx.font = "18px Segoe UI";
+    ctx.textAlign = "center";
+    ctx.fillText(months[i], x, y);
+}
+
+const trips = [
+    {start:1, end:2, color:"#ff6b6b"},
+    {start:3, end:4, color:"#4dabf7"},
+    {start:6, end:7, color:"#51cf66"},
+    {start:9, end:10, color:"#ffd43b"}
+];
+
+trips.forEach(trip => {
+
+    ctx.beginPath();
+    ctx.strokeStyle = trip.color;
+    ctx.lineWidth = 30;
+
+    ctx.arc(
+        centerX,
+        centerY,
+        radius,
+        (trip.start / 12) * 2 * Math.PI - Math.PI/2,
+        (trip.end / 12) * 2 * Math.PI - Math.PI/2
+    );
+
+    ctx.stroke();
+
+});
+
+ctx.fillStyle = "#0066ff";
+ctx.font = "bold 32px Segoe UI";
+ctx.fillText("2027", centerX, centerY + 10);
+
+</script>
+
+</body>
+</html>
